@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //게임게임
+        //만들기
     }
 
     // Update is called once per frame
