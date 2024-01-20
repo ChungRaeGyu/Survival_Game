@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class StartPageButtonManager : MonoBehaviour
+public class ButtonManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -16,10 +15,23 @@ public class StartPageButtonManager : MonoBehaviour
     {
         
     }
-    public void GameStartBtn(){
+
+    public void GameStartBtn()
+    {
         SceneManager.LoadScene("Lobby");
     }
-    public void GameExitBtn(){
+    public void GameExitBtn()
+    {
         Application.Quit();
+    }
+    public void EnterRoomBtn()
+    {
+        SceneManager.LoadScene("Room");
+    }
+    public void OpenStorageBtn(){
+
+    }
+    public void OpenShopBtn(){
+        
     }
 }
