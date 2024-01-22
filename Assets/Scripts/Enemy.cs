@@ -47,35 +47,27 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    void EnemyLost()
-    {
-        
-    }
     void EnemyFind()
     {
         Collider[] collider 
         = Physics.OverlapSphere(this.transform.position,SensorRadius,1 << 6);
         if(collider != null){
             target = collider[0].gameObject.transform;
+            CurMoveTime = 0f;
             targetFind = true;
         }
-            if(targetFind)
-            {
-                CurMoveTime = 0f;
-            }
-    }
-    void EnemyFollow()
-    {
-        if(target)
-        {
+        else{
             CurMoveTime += targetFolTime * Time.deltaTime;
             if(CurMoveTime >= targetFolTime)
             {
                 CurMoveTime = 0f;
-                targetFind = !targetFind;
-                //여기서 랜덤무빙 시작 줄(피곤해서 자러가야지)
+                targetFind = false;
+                target = null;
             }
         }
+    }
+    void EnemyFollow()
+    {
         Vector3 direction = (target.transform.position - this.transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         this.transform.rotation = lookRotation;
