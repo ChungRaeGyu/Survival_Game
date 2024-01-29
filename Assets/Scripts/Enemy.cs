@@ -3,66 +3,105 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 public class Enemy : MonoBehaviour
 {
+    public enum MoveDirectionType {horizontal, vertical};
+    public MoveDirectionType type;
     Rigidbody rigid;
-    #region [Enemy Startus]
+    BoxCollider bcol;
+
+#region [Condition]
+    bool faint = false; //      move,attack,talent (x)
+    bool canAttack = false; //  move, attack (o) / talent (x)
+#endregion
+#region [Enemy Status]
     public float speed = 3f;
     public int MaxHp = 10;
     public int CurHp = 0;
-    public int SensorRadius = 5;
+    public int sensorRadius = 10;
 #endregion
-    #region [Move]
+#region [Attack]
+    bool isAttack = false;
+    public int atksenseDis = 5;
+    Coroutine attackCoru;
+#endregion
+#region [Move]
     Transform target;
     bool targetFind = false;
     public float targetFolTime = 3f;
-    public int DirType = 0; // type1= horizontal, type2= vertical
     private int CurDirType;
     private bool TurnDir = false;
     private bool Movechk = false;
-    private float CurMoveTime = 0; // CurrentMoveCoolDown
-    public int MoveTime = 2; // Moving Time
+    public float CurMoveTime = 0; // CurrentMoveCoolDown
+    public int MoveTime = 5; // Moving Time
     public int MoveCD = 5; // MoveCoolDown
     Vector3 Pos = Vector3.forward; // Current diretion
 #endregion
     void Start()
     {
-        CurDirType = DirType;
+        CurDirType = (int)type;
+        bcol = this.GetComponentInChildren<BoxCollider>();
         rigid = GetComponent<Rigidbody>();
+        CurHp = MaxHp;
     }
 
     void Update()
     {
-        EnemyFind();
-        if(targetFind){
+        if(!isAttack){
+            EnemyFind();
+            if(targetFind){
             EnemyFollow();
-        }
-        else{
-        if(Movechk){ // wanna move?
-            IdleMove();
             }
-        else{ // nope! dont want move
-            WaitMove();
+            else{
+                if(Movechk){ // wanna move?
+                    IdleMove();
+                }
+                else{ // nope! dont want move
+                    WaitMove();
+                }
             }
         }
+    }
+    IEnumerator IEattack()
+    {
+        isAttack = true;
+        yield return new WaitForSeconds(3.0f);
+        IsAttack();
+        yield return new WaitForSeconds(1.0f);
+        isAttack = false;
+    }
+    void IsAttack()
+    {
+        bcol.enabled = true;
     }
     void EnemyFind()
     {
         Collider[] collider 
-        = Physics.OverlapSphere(this.transform.position,SensorRadius,1 << 6);
-        if(collider != null){
+        = Physics.OverlapSphere(this.transform.position,sensorRadius,1 << 6);
+        if(collider.Length > 0){
             target = collider[0].gameObject.transform;
+            Debug.Log("player find");
             CurMoveTime = 0f;
             targetFind = true;
+
+            Vector3 offset = target.position - transform.position;
+            float sqrLen = offset.sqrMagnitude;
+            
+            if(sqrLen < atksenseDis*atksenseDis){ 
+                attackCoru = StartCoroutine(IEattack());
+            }
         }
-        else{
-            CurMoveTime += targetFolTime * Time.deltaTime;
-            if(CurMoveTime >= targetFolTime)
-            {
-                CurMoveTime = 0f;
-                targetFind = false;
-                target = null;
+        else{ // this play line when isnt find to player
+            if(targetFind){
+                CurMoveTime += Time.deltaTime;
+                if(CurMoveTime >= targetFolTime)
+                {
+                    CurMoveTime = 0f;
+                    targetFind = false;
+                    target = null;
+                }
             }
         }
     }
@@ -75,8 +114,10 @@ public class Enemy : MonoBehaviour
     }
     void WaitMove() // MoveCoolTime
     {
-        if(CurMoveTime <= MoveTime)
-        CurMoveTime += MoveTime * Time.deltaTime;
+        if(CurMoveTime < MoveCD){
+        CurMoveTime += Time.deltaTime;
+        Debug.Log("wait");
+        }
         else{
         Movechk = !Movechk;
         CurMoveTime = 0;
@@ -84,16 +125,18 @@ public class Enemy : MonoBehaviour
     }
     void IdleMove()
     {
-        switch (DirType)// Horizontal
+        switch (CurDirType)// Horizontal
         {
             case 0: // Change direction in horizontal
             CurMoveTime = 0;
             if(TurnDir){
-            this.transform.localRotation = Quaternion.Euler(0, 0, 0); // Right
+            this.transform.localRotation = Quaternion.Euler(0, 0, 0); // forward
+            Pos = Vector3.right;
             TurnDir = !TurnDir;
             }
             else{
-            this.transform.localRotation = Quaternion.Euler(0, 180, 0); // Left
+            this.transform.localRotation = Quaternion.Euler(0, 180, 0); // back
+            Pos = Vector3.left;
             TurnDir = !TurnDir;
             }
             CurDirType = 2;
@@ -101,23 +144,27 @@ public class Enemy : MonoBehaviour
             case 1: // Change diretion in vertical
             CurMoveTime = 0;
             if(TurnDir){
-            this.transform.localRotation = Quaternion.Euler(0, 90, 0); // Up
+            this.transform.localRotation = Quaternion.Euler(0, -90, 0); // right
+            Pos = Vector3.forward;
             TurnDir = !TurnDir;
             }
             else{
-            this.transform.localRotation = Quaternion.Euler(0, -90, 0); // Down
+            this.transform.localRotation = Quaternion.Euler(0, 90, 0); // left
+            Pos = Vector3.back;
             TurnDir = !TurnDir;
             }
             CurDirType = 2;
             break;
             case 2: // Cooldown after finish line
-            if(MoveTime >= CurMoveTime){ // Moving
+            if(MoveTime > CurMoveTime){ // Moving
+            Debug.Log("movemove");
             rigid.velocity = speed * Pos;
-            CurMoveTime += MoveTime * Time.deltaTime;
+            CurMoveTime += Time.deltaTime;
             }
             else{ // EndMove
             Movechk = !Movechk;
-            CurMoveTime = DirType;
+            CurMoveTime = 0f;
+            CurDirType = (int)type;
             }
             break;
             default: // Over Count Solution
