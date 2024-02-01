@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Vector3 difference;
     Camera ViewCamera;
+    Image[] Heart;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,12 +19,16 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         difference = Camera.main.transform.position - transform.position;
         ViewCamera = Camera.main;
+        Heart = GameObject.Find("Canvas").GetComponentsInChildren<Image>();
     }
 
     // Update is called once per frame
+    private void FixedUpdate() {
+        move();
+    }
     void Update()
     {
-        move();
+        
         //CameraPostion();
         LookAt();
         
@@ -32,7 +37,7 @@ public class Player : MonoBehaviour
     void move(){
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputZ = Input.GetAxisRaw("Vertical");
-        Vector3 velocity = new Vector3(inputX, 0, inputZ);
+        Vector3 velocity = new Vector3(inputX, 0, inputZ).normalized;
         velocity *= speed;
         rigid.velocity = velocity;
     }
@@ -50,6 +55,9 @@ public class Player : MonoBehaviour
             Vector3 Anti_Tilting_Position = new Vector3(point.x,transform.position.y,point.z);
             transform.LookAt(Anti_Tilting_Position);
         }
+        
+    }
+    public void Damaged(){
         
     }
 }
