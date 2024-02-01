@@ -37,7 +37,9 @@ public class InventoryController : MonoBehaviour
 
         
         if(Input.GetKeyDown(KeyCode.Q)){
-            CreateRandomItem();
+            if(selectedItem ==null){
+                CreateRandomItem();
+            }
         }
         if(Input.GetKeyDown(KeyCode.W)){
             InsertRandomItem();
@@ -122,6 +124,7 @@ public class InventoryController : MonoBehaviour
 
         rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(canvasTransform);
+        rectTransform.SetAsLastSibling();
 
         int selectedItemID = UnityEngine.Random.Range(0,items.Count);
         inventoryItem.Set(items[selectedItemID]);
@@ -163,6 +166,7 @@ public class InventoryController : MonoBehaviour
                 selectedItem = overlapItem;
                 overlapItem = null;
                 rectTransform = selectedItem.GetComponent<RectTransform>();
+                rectTransform.SetAsLastSibling();
             }
         }
         
