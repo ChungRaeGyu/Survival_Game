@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     Vector3 difference;
     Camera ViewCamera;
     Image[] Heart;
+    public GameObject Inventory_Canvas;
+    bool InventoryOpen=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +31,25 @@ public class Player : MonoBehaviour
     void Update()
     {
         
-        //CameraPostion();
+        CameraPostion();
         LookAt();
-        
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            InventoryOpenKey();
+        }
+    }
+
+    private void InventoryOpenKey()
+    {
+        if (!InventoryOpen)
+        {
+            Inventory_Canvas.SetActive(true);
+        }
+        else
+        {
+            Inventory_Canvas.SetActive(false);
+        }
+        InventoryOpen = !InventoryOpen;
     }
 
     void move(){

@@ -22,7 +22,7 @@ public class InventoryItem : MonoBehaviour
             if(rotated==false){
                 return itemData.width;
             }
-            return itemData.width;
+            return itemData.height;
         }
     }
     public int onGridPositionX;
