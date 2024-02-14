@@ -7,21 +7,26 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     int speed = 0;
-    public Text ModeText;
     Rigidbody rigid;
     Vector3 difference;
     Camera ViewCamera;
-    Image[] Heart;
-    public GameObject Inventory_Canvas;
-    bool InventoryOpen=false;
-    // Start is called before the first frame update
+    //Image[] Heart;
+
+    [SerializeField] GameObject Inventory;
+    public bool InventoryOpen=false;
+
+    [SerializeField] GameObject OpenText;
+    bool OpenItemBox=false;
+
+    [SerializeField] GameObject ItemBoxGrid;
+
     void Start()
     {
         speed = 3;
         rigid = GetComponent<Rigidbody>();
         difference = Camera.main.transform.position - transform.position;
         ViewCamera = Camera.main;
-        Heart = GameObject.Find("Canvas").GetComponentsInChildren<Image>();
+        //Heart = GameObject.Find("Canvas").GetComponentsInChildren<Image>();
     }
 
     // Update is called once per frame
@@ -30,12 +35,32 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        
         CameraPostion();
         LookAt();
         if(Input.GetKeyDown(KeyCode.I))
         {
             InventoryOpenKey();
+        }
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            ItemBoxOpenKey();
+            
+        }
+    }
+
+    private void ItemBoxOpenKey()
+    {
+        if(!InventoryOpen){
+            InventoryOpenKey();
+        }
+        if (OpenItemBox)
+        {
+            ItemBoxGrid.SetActive(OpenItemBox);
+            OpenItemBox = !OpenItemBox;
+        }
+        else
+        {
+            ItemBoxGrid.SetActive(OpenItemBox);
         }
     }
 
@@ -43,11 +68,11 @@ public class Player : MonoBehaviour
     {
         if (!InventoryOpen)
         {
-            Inventory_Canvas.SetActive(true);
+            Inventory.SetActive(true);
         }
         else
         {
-            Inventory_Canvas.SetActive(false);
+            Inventory.SetActive(false);
         }
         InventoryOpen = !InventoryOpen;
     }
@@ -77,5 +102,21 @@ public class Player : MonoBehaviour
     }
     public void Damaged(){
         
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        OpenBox(other,true);
+    }
+    private void OnTriggerExit(Collider other) {
+        OpenBox(other, false);
+    }
+
+    private void OpenBox(Collider other, bool check)
+    {
+        if (other.CompareTag("ItemBox"))
+        {
+            OpenText.SetActive(check);
+            OpenItemBox=check;
+        }
     }
 }

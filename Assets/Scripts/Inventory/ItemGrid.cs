@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
@@ -17,6 +16,7 @@ public class ItemGrid : MonoBehaviour
 
     [SerializeField] int girdSizeWidth = 20;
     [SerializeField] int girdSizeheight = 10;
+    [SerializeField] Transform canvasTransform;
 
     void Start()
     {
@@ -133,6 +133,7 @@ public class ItemGrid : MonoBehaviour
                 inventoryItemSlot[item.onGridPositionX + ix, item.onGridPositionY + iy] = null;
             }
         }
+        item.GetComponent<Transform>().SetParent(canvasTransform);
     }
 
     bool PositionCheck(int posX,int posY){

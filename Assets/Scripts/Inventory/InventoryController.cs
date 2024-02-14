@@ -25,14 +25,19 @@ public class InventoryController : MonoBehaviour
     [SerializeField] List<ItemData> items;
     [SerializeField] GameObject itemPrefeb;
     [SerializeField] Transform canvasTransform;
+    Player Player;
 
     InventoryHighlight inventoryHighlight;
 
     private void Awake() {
         inventoryHighlight = GetComponent<InventoryHighlight>();
+        Player = GameObject.Find("Player").GetComponent<Player>();
+
     }
     private void Update()
     {
+
+        if(!Player.InventoryOpen){return;}
         ItemIconDrag();
 
         
