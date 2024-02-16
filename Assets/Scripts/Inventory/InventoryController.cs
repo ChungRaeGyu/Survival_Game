@@ -7,7 +7,7 @@ using UnityEngine;
 public class InventoryController : MonoBehaviour
 {
     //[HideInInspector]
-    private ItemGrid selectedItemGrid;
+    public ItemGrid selectedItemGrid;
 
 
     public ItemGrid SelectedItemGrid { 
@@ -17,6 +17,8 @@ public class InventoryController : MonoBehaviour
             inventoryHighlight.SetParent(value);
         }
     }
+
+    [SerializeField] ItemGrid InventoryGrid;
 
     InventoryItem selectedItem;
     InventoryItem overlapItem;
@@ -46,14 +48,9 @@ public class InventoryController : MonoBehaviour
                 CreateRandomItem();
             }
         }
-        if(Input.GetKeyDown(KeyCode.W)){
-            InsertRandomItem();
-        }
-
         if(Input.GetKeyDown(KeyCode.R)){
             RotateItem();
         }
-
         if (selectedItemGrid == null) {
             inventoryHighlight.Show(false);
             return; 
@@ -65,7 +62,9 @@ public class InventoryController : MonoBehaviour
         {
             LeftMouseButtonPress();
         }
-
+        if(Input.GetMouseButtonDown(1) && Input.GetKey(KeyCode.LeftShift)){
+            //InsertRandomItem(); 추후 업데이트
+        }
     }
 
     private void RotateItem()
@@ -73,16 +72,19 @@ public class InventoryController : MonoBehaviour
         if(selectedItem == null){return;}
         selectedItem.Rotate();
     }
-
+    /*
     private void InsertRandomItem()
     {
         //selectedItemGrid를 Default값을 하나 잡아 놔야겠는 걸? 현재 grid에 마우스를 올려 놔야만 아이템이 들어간다.
-        if(selectedItemGrid==null){return;}
+        if (selectedItemGrid == null) {
+            SelectedItemGrid = InventoryGrid;
+        }
         CreateRandomItem();
         InventoryItem itemToInsert = selectedItem;
         selectedItem = null;
         InsertItem(itemToInsert);
-    }
+    }*/
+
 
     private void InsertItem(InventoryItem itemToInsert)
     {

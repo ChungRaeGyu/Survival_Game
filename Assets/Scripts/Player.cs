@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Vector3 difference;
     Camera ViewCamera;
+    string caseText;
     //Image[] Heart;
 
     [SerializeField] GameObject Inventory;
@@ -19,6 +21,8 @@ public class Player : MonoBehaviour
     bool OpenItemBox=false;
 
     [SerializeField] GameObject ItemBoxGrid;
+
+    bool OnPortal=false;
 
     void Start()
     {
@@ -43,24 +47,42 @@ public class Player : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.G))
         {
-            ItemBoxOpenKey();
-            
+            InteractionMethod();
         }
     }
 
-    private void ItemBoxOpenKey()
+    private void InteractionMethod()
     {
-        if(!InventoryOpen){
-            InventoryOpenKey();
+        if(caseText == null){
+            return;
         }
-        if (OpenItemBox)
-        {
-            ItemBoxGrid.SetActive(OpenItemBox);
-            OpenItemBox = !OpenItemBox;
-        }
-        else
-        {
-            ItemBoxGrid.SetActive(OpenItemBox);
+        switch(caseText){
+            case "ItemBox" :
+                if (OpenItemBox)
+                {
+                    if (!InventoryOpen)
+                    {
+                        InventoryOpenKey();
+                    }
+                    ItemBoxGrid.SetActive(OpenItemBox);
+                    OpenItemBox = !OpenItemBox;
+                    Debug.Log("열림");
+                    break;
+                }
+                else
+                {
+                    ItemBoxGrid.SetActive(OpenItemBox);
+                    OpenItemBox = !OpenItemBox;
+                    Debug.Log("닫힘");
+                    break;
+                }
+            case "Portal" :
+                if (OnPortal)
+                {
+                    SceneManager.LoadScene("Lobby");
+                    break;
+                }
+                break;
         }
     }
 
@@ -105,18 +127,28 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        OpenBox(other,true);
+        Interaction(other, true);
     }
     private void OnTriggerExit(Collider other) {
-        OpenBox(other, false);
+        Interaction(other, false);
+        caseText = null;
     }
 
-    private void OpenBox(Collider other, bool check)
+    private void Interaction(Collider other, bool check)
     {
         if (other.CompareTag("ItemBox"))
         {
+            OpenText.GetComponent<Text>().text = "G 키를 눌러 상자를 열어보세요.";
             OpenText.SetActive(check);
             OpenItemBox=check;
+            caseText = other.tag;
+        }
+        if(other.CompareTag("Portal")){
+            OpenText.GetComponent<Text>().text = "G 키를 눌러 탈출합니다.";
+            OpenText.SetActive(check);
+            OnPortal=check;
+            Debug.Log("탈출 :" + check);
+            caseText = other.tag;
         }
     }
 }
