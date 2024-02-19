@@ -18,18 +18,28 @@ public class ItemGrid : MonoBehaviour
     [SerializeField] int girdSizeheight = 10;
     [SerializeField] Transform canvasTransform;
 
-    void Start()
+
+    void Awake()
     {
         rectTransform = GetComponent<RectTransform>(); //UI의 기준점 위치
         Init(girdSizeWidth, girdSizeheight);
     }
-
+    private void Start()
+    {
+        //StartCoroutine(wait());
+    }
+    IEnumerator wait(){
+        yield return new WaitForSecondsRealtime(0.1f);
+        Debug.Log("실행");
+        gameObject.SetActive(false);
+    }
     //Set Inventroy size
     private void Init(int width, int height)
-    {
+    {        
         inventoryItemSlot = new InventoryItem[width,height];
         Vector2 size = new Vector2(width * tileSizeWidth,height*tileSizeHeight);
         rectTransform.sizeDelta = size;
+        Debug.Log("Itemgrid : " +this.name);
     }
 
     Vector2 positionOntheGrid = new Vector2();  //Inventory상의 기준점 설정

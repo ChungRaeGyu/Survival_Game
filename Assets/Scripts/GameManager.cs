@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        //게임게임
-        //만들기
+        Active_All();
     }
 
-    // Update is called once per frame
-    void Update()
+    private static void Active_All()
     {
-        
-    }
+        GameObject[] inactiveObjects = GameObject.Find("Inventory_Canvas").GetComponentsInChildren<GameObject>();
 
+        foreach (GameObject obj in inactiveObjects)
+        {
+            obj.SetActive(true);
+        }
+    }
 }

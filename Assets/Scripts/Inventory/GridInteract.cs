@@ -16,15 +16,15 @@ public class GridInteract : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     //마우스가 특정요소로 진입했을 때
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("들어옴");
         inventoryController.SelectedItemGrid = itemGrid;
+        Debug.Log("들어옴");
     }
 
     ////마우스가 특정요소에서 나왔을 때
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("나감");
         inventoryController.SelectedItemGrid = null;
+        Debug.Log("나옴");
     }
 
 

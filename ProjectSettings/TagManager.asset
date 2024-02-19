@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ItemBox
   - Portal
+  - UI
   layers:
   - Default
   - TransparentFX

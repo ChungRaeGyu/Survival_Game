@@ -138,11 +138,11 @@ GameObject:
   - component: {fileID: 130423103}
   m_Layer: 5
   m_Name: Inventory
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &130423102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -242,11 +242,11 @@ GameObject:
   - component: {fileID: 505893746}
   m_Layer: 5
   m_Name: ItemBoxGrid
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &505893745
 RectTransform:
   m_ObjectHideFlags: 0
@@ -394,6 +394,74 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &653930161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653930164}
+  - component: {fileID: 653930163}
+  - component: {fileID: 653930162}
+  m_Layer: 0
+  m_Name: InventoryController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &653930162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653930161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7195a31aa5e4aa14ab06dfef7f2ccfb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlighter: {fileID: 727080375}
+--- !u!114 &653930163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653930161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d39867dd8e78945bfabf5662e281df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedItemGrid: {fileID: 0}
+  InventoryGrid: {fileID: 130423104}
+  selectedItem: {fileID: 0}
+  items:
+  - {fileID: 11400000, guid: b7f8ec4b03a7ba041bf15e94be84b54f, type: 2}
+  - {fileID: 11400000, guid: 8b5c9b396f3b7a140b77472f59f31cf0, type: 2}
+  - {fileID: 11400000, guid: 3ff756ad73c8cda4292e62b4973884ad, type: 2}
+  itemPrefeb: {fileID: 163974780816156977, guid: e1c3feaa5d6468a4aa9bb28d160caab1, type: 3}
+  canvasTransform: {fileID: 2086870061}
+  ItmeBoxGird: {fileID: 505893747}
+--- !u!4 &653930164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653930161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 128.16472, y: 114.54645, z: -178.85553}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -593,7 +661,7 @@ GameObject:
   - component: {fileID: 1023794922}
   m_Layer: 5
   m_Name: OpenText
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1317,10 +1385,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 098e8856461a38440b9027b3fb2f966a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Inventory: {fileID: 130423101}
+  Inventory: {fileID: 0}
   InventoryOpen: 0
   OpenText: {fileID: 1023794920}
-  ItemBoxGrid: {fileID: 505893744}
+  ItemBoxGrid: {fileID: 0}
 --- !u!1 &1960819529
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,8 +1400,6 @@ GameObject:
   - component: {fileID: 1960819532}
   - component: {fileID: 1960819531}
   - component: {fileID: 1960819530}
-  - component: {fileID: 1960819534}
-  - component: {fileID: 1960819533}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1415,39 +1481,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
---- !u!114 &1960819533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960819529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7195a31aa5e4aa14ab06dfef7f2ccfb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlighter: {fileID: 727080375}
---- !u!114 &1960819534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1960819529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d39867dd8e78945bfabf5662e281df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedItemGrid: {fileID: 0}
-  InventoryGrid: {fileID: 130423104}
-  items:
-  - {fileID: 11400000, guid: b7f8ec4b03a7ba041bf15e94be84b54f, type: 2}
-  - {fileID: 11400000, guid: 8b5c9b396f3b7a140b77472f59f31cf0, type: 2}
-  - {fileID: 11400000, guid: 3ff756ad73c8cda4292e62b4973884ad, type: 2}
-  itemPrefeb: {fileID: 163974780816156977, guid: e1c3feaa5d6468a4aa9bb28d160caab1, type: 3}
-  canvasTransform: {fileID: 2086870061}
 --- !u!1 &2086870057
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,6 +1493,7 @@ GameObject:
   - component: {fileID: 2086870060}
   - component: {fileID: 2086870059}
   - component: {fileID: 2086870058}
+  - component: {fileID: 2086870062}
   m_Layer: 5
   m_Name: Inventory_Canvas
   m_TagString: Untagged
@@ -1552,6 +1586,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &2086870062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086870057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4106a09106f0c9f478539cb08638914c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1565,3 +1611,4 @@ SceneRoots:
   - {fileID: 2086870061}
   - {fileID: 1103819630}
   - {fileID: 1628574919}
+  - {fileID: 653930164}

@@ -14,23 +14,36 @@ public class Player : MonoBehaviour
     string caseText;
     //Image[] Heart;
 
-    [SerializeField] GameObject Inventory;
+    public GameObject Inventory;
     public bool InventoryOpen=false;
+
 
     [SerializeField] GameObject OpenText;
     bool OpenItemBox=false;
 
-    [SerializeField] GameObject ItemBoxGrid;
+    public GameObject ItemBoxGrid;
 
     bool OnPortal=false;
 
+    InventoryController inventoryController;
+    private void Awake() {
+        GameObject InvenCanvas = GameObject.Find("Inventory_Canvas");
+        
+        Inventory = InvenCanvas.transform.GetChild(0).gameObject;
+        ItemBoxGrid = InvenCanvas.transform.GetChild(1).gameObject;
+        Inventory.SetActive(false);
+        ItemBoxGrid.SetActive(false);
+    }
+    
     void Start()
     {
         speed = 3;
         rigid = GetComponent<Rigidbody>();
         difference = Camera.main.transform.position - transform.position;
         ViewCamera = Camera.main;
+        inventoryController = FindObjectOfType(typeof(InventoryController)) as InventoryController;
         //Heart = GameObject.Find("Canvas").GetComponentsInChildren<Image>();
+
     }
 
     // Update is called once per frame
@@ -95,6 +108,7 @@ public class Player : MonoBehaviour
         else
         {
             Inventory.SetActive(false);
+            inventoryController.SelectedItemGrid = null;
         }
         InventoryOpen = !InventoryOpen;
     }
@@ -142,6 +156,9 @@ public class Player : MonoBehaviour
             OpenText.SetActive(check);
             OpenItemBox=check;
             caseText = other.tag;
+            if(!check){
+                ItemBoxGrid.SetActive(check);
+            }
         }
         if(other.CompareTag("Portal")){
             OpenText.GetComponent<Text>().text = "G 키를 눌러 탈출합니다.";

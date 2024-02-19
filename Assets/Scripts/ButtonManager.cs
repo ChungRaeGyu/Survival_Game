@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,7 +26,7 @@ public class ButtonManager : MonoBehaviour
     }
     public void EnterRoomBtn()
     {
-        SceneManager.LoadScene("Room");
+        SceneManager.LoadScene("PlayerTest");
     }
     public void OpenStorageBtn(){
 

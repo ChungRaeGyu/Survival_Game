@@ -20,7 +20,7 @@ public class InventoryController : MonoBehaviour
 
     [SerializeField] ItemGrid InventoryGrid;
 
-    InventoryItem selectedItem;
+    [SerializeField] InventoryItem selectedItem;
     InventoryItem overlapItem;
     RectTransform rectTransform;
 
@@ -31,15 +31,56 @@ public class InventoryController : MonoBehaviour
 
     InventoryHighlight inventoryHighlight;
 
-    private void Awake() {
-        inventoryHighlight = GetComponent<InventoryHighlight>();
-        Player = GameObject.Find("Player").GetComponent<Player>();
+    //ItemBox
 
+    [SerializeField] ItemGrid ItmeBoxGird;
+
+    //Don'tDestroyOnLoad
+    private static InventoryController instance =null;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad_Singleton();
+        inventoryHighlight = GetComponent<InventoryHighlight>();
+        try
+        {
+            Player = GameObject.Find("Player").GetComponent<Player>();
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+        
+
+    }
+
+    private void DontDestroyOnLoad_Singleton()
+    {
+        if (null == instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    private void Start() {
+        SetItemBox();
     }
     private void Update()
     {
-
-        if(!Player.InventoryOpen){return;}
+        try
+        {
+            if (!Player.InventoryOpen) { return; }
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+        
         ItemIconDrag();
 
         
@@ -72,7 +113,18 @@ public class InventoryController : MonoBehaviour
         if(selectedItem == null){return;}
         selectedItem.Rotate();
     }
-    /*
+    private void SetItemBox()
+    {
+        if (selectedItemGrid == null)
+        {
+            SelectedItemGrid = ItmeBoxGird;
+        }
+        CreateRandomItem();
+        InventoryItem itemToInsert = selectedItem;
+        selectedItem = null;
+        InsertItem(itemToInsert);
+        SelectedItemGrid = null;
+    }
     private void InsertRandomItem()
     {
         //selectedItemGrid를 Default값을 하나 잡아 놔야겠는 걸? 현재 grid에 마우스를 올려 놔야만 아이템이 들어간다.
@@ -83,13 +135,25 @@ public class InventoryController : MonoBehaviour
         InventoryItem itemToInsert = selectedItem;
         selectedItem = null;
         InsertItem(itemToInsert);
-    }*/
+        
+    }
 
-
-    private void InsertItem(InventoryItem itemToInsert)
+    private void CreateRandomItem()
     {
-        Vector2Int? posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert); //null허용
+        InventoryItem inventoryItem = Instantiate(itemPrefeb).GetComponent<InventoryItem>();
+        selectedItem = inventoryItem;
 
+        rectTransform = inventoryItem.GetComponent<RectTransform>();
+        rectTransform.SetParent(canvasTransform);
+        rectTransform.SetAsLastSibling(); //가장 상위 레이어로 이동
+
+        int selectedItemID = UnityEngine.Random.Range(0, items.Count);
+        inventoryItem.Set(items[selectedItemID]);
+        Debug.Log(inventoryItem);
+    }
+    private void InsertItem(InventoryItem itemToInsert)
+    {        
+        Vector2Int? posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert); //null허용
         if(posOnGrid ==null){return;}
         selectedItemGrid.PlaceItem(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
     }
@@ -124,18 +188,7 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    private void CreateRandomItem()
-    {
-        InventoryItem inventoryItem = Instantiate(itemPrefeb).GetComponent<InventoryItem>();
-        selectedItem = inventoryItem;
 
-        rectTransform = inventoryItem.GetComponent<RectTransform>();
-        rectTransform.SetParent(canvasTransform);
-        rectTransform.SetAsLastSibling();
-
-        int selectedItemID = UnityEngine.Random.Range(0,items.Count);
-        inventoryItem.Set(items[selectedItemID]);
-    }
 
     private void LeftMouseButtonPress()
     {
@@ -185,6 +238,7 @@ public class InventoryController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform = selectedItem.GetComponent<RectTransform>();
+            rectTransform.SetAsLastSibling();
         }
     }
 
