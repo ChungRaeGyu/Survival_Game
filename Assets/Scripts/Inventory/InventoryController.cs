@@ -9,7 +9,7 @@ public class InventoryController : MonoBehaviour
     //[HideInInspector]
     public ItemGrid selectedItemGrid;
 
-
+    InventoryHighlight inventoryHighlight;
     public ItemGrid SelectedItemGrid { 
         get => selectedItemGrid; 
         set {
@@ -17,43 +17,35 @@ public class InventoryController : MonoBehaviour
             inventoryHighlight.SetParent(value);
         }
     }
-
+    GameObject Inventory;
     [SerializeField] ItemGrid InventoryGrid;
+    GameObject ItemBox;
+    GameObject Storage;
+    public bool InventoryOpen = false;
 
+    
     [SerializeField] InventoryItem selectedItem;
     InventoryItem overlapItem;
     RectTransform rectTransform;
 
     [SerializeField] List<ItemData> items;
     [SerializeField] GameObject itemPrefeb;
-    [SerializeField] Transform canvasTransform;
-    Player Player;
+    [SerializeField] Transform canvasTransform;    
 
-    InventoryHighlight inventoryHighlight;
+    
 
     //ItemBox
 
     [SerializeField] ItemGrid ItmeBoxGird;
-
+    
     //Don'tDestroyOnLoad
     private static InventoryController instance =null;
 
     private void Awake()
     {
         DontDestroyOnLoad_Singleton();
-        inventoryHighlight = GetComponent<InventoryHighlight>();
-        try
-        {
-            Player = GameObject.Find("Player").GetComponent<Player>();
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
         
-
     }
-
     private void DontDestroyOnLoad_Singleton()
     {
         if (null == instance)
@@ -69,21 +61,27 @@ public class InventoryController : MonoBehaviour
 
     private void Start() {
         SetItemBox();
+        UISetting();
+    }
+    private void UISetting()
+    {
+        GameObject InvenCanvas = GameObject.Find("Inventory_Canvas");
+        Inventory = InvenCanvas.transform.GetChild(0).gameObject;
+        ItemBox = InvenCanvas.transform.GetChild(1).gameObject;
+        Storage = InvenCanvas.transform.GetChild(2).gameObject;
+        Inventory.SetActive(false);
+        ItemBox.SetActive(false);
+        Storage.SetActive(false);
     }
     private void Update()
     {
-        try
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            if (!Player.InventoryOpen) { return; }
+            InventoryOpenKey();
         }
-        catch (System.Exception)
-        {
-            throw;
-        }
-        
+        if (!InventoryOpen) { return; }     
         ItemIconDrag();
 
-        
         if(Input.GetKeyDown(KeyCode.Q)){
             if(selectedItem ==null){
                 CreateRandomItem();
@@ -92,6 +90,7 @@ public class InventoryController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R)){
             RotateItem();
         }
+
         if (selectedItemGrid == null) {
             inventoryHighlight.Show(false);
             return; 
@@ -107,6 +106,19 @@ public class InventoryController : MonoBehaviour
             //InsertRandomItem(); 추후 업데이트
         }
     }
+    public void InventoryOpenKey()
+    {
+        if (!InventoryOpen)
+        {
+            Inventory.SetActive(true);
+        }
+        else
+        {
+            Inventory.SetActive(false);
+            SelectedItemGrid = null;
+        }
+        InventoryOpen = !InventoryOpen;
+    }
 
     private void RotateItem()
     {
@@ -115,6 +127,7 @@ public class InventoryController : MonoBehaviour
     }
     private void SetItemBox()
     {
+        inventoryHighlight = GetComponent<InventoryHighlight>();
         if (selectedItemGrid == null)
         {
             SelectedItemGrid = ItmeBoxGird;

@@ -1363,6 +1363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedItemGrid: {fileID: 0}
   InventoryGrid: {fileID: 1357562796}
+  InventoryOpen: 0
   selectedItem: {fileID: 0}
   items:
   - {fileID: 11400000, guid: b7f8ec4b03a7ba041bf15e94be84b54f, type: 2}
@@ -1824,7 +1825,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1629984222
 RectTransform:
   m_ObjectHideFlags: 0

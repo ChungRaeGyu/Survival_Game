@@ -14,10 +14,6 @@ public class Player : MonoBehaviour
     string caseText;
     //Image[] Heart;
 
-    public GameObject Inventory;
-    public bool InventoryOpen=false;
-
-
     [SerializeField] GameObject OpenText;
     bool OpenItemBox=false;
 
@@ -26,14 +22,6 @@ public class Player : MonoBehaviour
     bool OnPortal=false;
 
     InventoryController inventoryController;
-    private void Awake() {
-        GameObject InvenCanvas = GameObject.Find("Inventory_Canvas");
-        
-        Inventory = InvenCanvas.transform.GetChild(0).gameObject;
-        ItemBoxGrid = InvenCanvas.transform.GetChild(1).gameObject;
-        Inventory.SetActive(false);
-        ItemBoxGrid.SetActive(false);
-    }
     
     void Start()
     {
@@ -54,10 +42,7 @@ public class Player : MonoBehaviour
     {
         CameraPostion();
         LookAt();
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            InventoryOpenKey();
-        }
+        
         if(Input.GetKeyDown(KeyCode.G))
         {
             InteractionMethod();
@@ -73,9 +58,9 @@ public class Player : MonoBehaviour
             case "ItemBox" :
                 if (OpenItemBox)
                 {
-                    if (!InventoryOpen)
+                    if (!inventoryController.InventoryOpen)
                     {
-                        InventoryOpenKey();
+                        inventoryController.InventoryOpenKey();
                     }
                     ItemBoxGrid.SetActive(OpenItemBox);
                     OpenItemBox = !OpenItemBox;
@@ -99,20 +84,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void InventoryOpenKey()
-    {
-        if (!InventoryOpen)
-        {
-            Inventory.SetActive(true);
-        }
-        else
-        {
-            Inventory.SetActive(false);
-            inventoryController.SelectedItemGrid = null;
-        }
-        InventoryOpen = !InventoryOpen;
-    }
-
+    
     void move(){
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputZ = Input.GetAxisRaw("Vertical");
