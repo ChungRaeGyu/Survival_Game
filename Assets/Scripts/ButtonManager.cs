@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour
 {
+    [SerializeField] InventoryController inventoryController;
     // Start is called before the first frame update
     void Start()
     {

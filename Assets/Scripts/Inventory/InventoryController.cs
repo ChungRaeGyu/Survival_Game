@@ -19,8 +19,8 @@ public class InventoryController : MonoBehaviour
     }
     GameObject Inventory;
     [SerializeField] ItemGrid InventoryGrid;
-    GameObject ItemBox;
-    GameObject Storage;
+    public GameObject ItemBox;
+    public GameObject Storage;
     public bool InventoryOpen = false;
 
     
