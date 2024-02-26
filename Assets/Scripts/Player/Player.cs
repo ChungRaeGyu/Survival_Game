@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
     
     Animator anim;
     [SerializeField] GameObject AttackRange;
-    BoxCollider AttackCollier;
+
+    DoorOpen Door;
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -36,8 +37,7 @@ public class Player : MonoBehaviour
         inventoryController = FindObjectOfType(typeof(InventoryController)) as InventoryController;
         //Heart = GameObject.Find("Canvas").GetComponentsInChildren<Image>();
         ItemBox = inventoryController.ItemBox;
-        AttackCollier = AttackRange.GetComponent<BoxCollider>();
-
+        AttackRange.SetActive(false);
     }
 
     // Update is called once per frame
@@ -99,6 +99,7 @@ public class Player : MonoBehaviour
                     break;
                 }
                 break;
+            case "Door": Door.OpenDoor();break;
         }
     }
 
@@ -139,6 +140,9 @@ public class Player : MonoBehaviour
             case "Portal":
                 SetPortal(other,true);
                 break;
+            case "Door":
+                SetDoor(other,true);
+                break;
         }
     }
     private void OnTriggerExit(Collider other)
@@ -151,10 +155,14 @@ public class Player : MonoBehaviour
             case "Portal":
                 SetPortal(other, false);
                 break;
+            case "Door":
+                SetDoor(other, false);
+                break;
         }
         ItemBox.SetActive(OpenItemBox);
         caseText = null;
         inventoryController.SelectedItemGrid = null;
+        Door = null;
     }
 
     private void SetPortal(Collider other,bool check)
@@ -172,7 +180,13 @@ public class Player : MonoBehaviour
         OpenItemBox = check;
         caseText = other.tag;
     }
-
+    private void SetDoor(Collider other, bool check)
+    {
+        OpenText.GetComponent<Text>().text = "G 키를 눌러 문을 엽니다.";
+        OpenText.SetActive(check);
+        caseText = other.tag;
+        Door = other.gameObject.GetComponent<DoorOpen>();
+    }
     private void AttackEnemy(Collider other)
     {
         if (AttackRange.activeSelf)
