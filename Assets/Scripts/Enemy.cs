@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     public enum MoveDirectionType {horizontal, vertical};
     public MoveDirectionType type;
     Rigidbody rigid;
-    BoxCollider bcol;
+    public BoxCollider bcol;
 
 #region [Condition]
     bool faint = false; //      move,attack,talent (x)
@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
 #endregion
 #region [Attack]
     bool isAttack = false;
-    public int atksenseDis = 5;
+    public int atksenseDis = 1;
     Coroutine attackCoru;
 #endregion
 #region [Move]
@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         CurDirType = (int)type;
-        bcol = this.GetComponentInChildren<BoxCollider>();
+        bcol = GetComponentInChildren<BoxCollider>();
         rigid = GetComponent<Rigidbody>();
         CurHp = MaxHp;
     }
@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
         if(!isAttack){
             EnemyFind();
             if(targetFind){
-            EnemyFollow();
+                EnemyFollow();
             }
             else{
                 if(Movechk){ // wanna move?
@@ -74,15 +74,15 @@ public class Enemy : MonoBehaviour
     }
     void IsAttack()
     {
+        Debug.Log("Attack!!");
         bcol.enabled = true;
     }
-    void EnemyFind()
+    void EnemyFind() // 범위 감지-> 범위 안에있다면 공격코루틴시작 -> 찾았지만 범위 밖에 있다면 특정시간 추적-> 원상태
     {
         Collider[] collider 
         = Physics.OverlapSphere(this.transform.position,sensorRadius,1 << 6);
         if(collider.Length > 0){
             target = collider[0].gameObject.transform;
-            Debug.Log("player find");
             CurMoveTime = 0f;
             targetFind = true;
 
@@ -105,8 +105,13 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+    void AttacMode()
+    {
+        
+    }
     void EnemyFollow()
     {
+        Debug.Log("EnemyFollow");
         Vector3 direction = (target.transform.position - this.transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         this.transform.rotation = lookRotation;
@@ -116,7 +121,7 @@ public class Enemy : MonoBehaviour
     {
         if(CurMoveTime < MoveCD){
         CurMoveTime += Time.deltaTime;
-        Debug.Log("wait");
+        Debug.Log("stop move");
         }
         else{
         Movechk = !Movechk;
@@ -125,18 +130,18 @@ public class Enemy : MonoBehaviour
     }
     void IdleMove()
     {
-        switch (CurDirType)// Horizontal
+        switch (CurDirType)
         {
             case 0: // Change direction in horizontal
             CurMoveTime = 0;
             if(TurnDir){
-            this.transform.localRotation = Quaternion.Euler(0, 0, 0); // forward
-            Pos = Vector3.right;
+            this.transform.rotation = Quaternion.Euler(0, -90, 0); // forward
+            Pos = Vector3.left;
             TurnDir = !TurnDir;
             }
             else{
-            this.transform.localRotation = Quaternion.Euler(0, 180, 0); // back
-            Pos = Vector3.left;
+            this.transform.rotation = Quaternion.Euler(0, 90, 0); // back
+            Pos = Vector3.right;
             TurnDir = !TurnDir;
             }
             CurDirType = 2;
@@ -144,12 +149,12 @@ public class Enemy : MonoBehaviour
             case 1: // Change diretion in vertical
             CurMoveTime = 0;
             if(TurnDir){
-            this.transform.localRotation = Quaternion.Euler(0, -90, 0); // right
+            this.transform.rotation = Quaternion.Euler(0, 0, 0); // right
             Pos = Vector3.forward;
             TurnDir = !TurnDir;
             }
             else{
-            this.transform.localRotation = Quaternion.Euler(0, 90, 0); // left
+            this.transform.rotation = Quaternion.Euler(0, 180, 0); // left
             Pos = Vector3.back;
             TurnDir = !TurnDir;
             }
