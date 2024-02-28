@@ -5,7 +5,6 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     BoxCollider boxcol;
-    Coroutine attackCoru;
     private void Start() {
         boxcol = GetComponent<BoxCollider>();
     }
