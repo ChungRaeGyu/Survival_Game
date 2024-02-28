@@ -32,8 +32,9 @@ public class DoorOpen : MonoBehaviour
     }
     IEnumerator time(){
         Optimization = false;
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(2f);
         Optimization = true;
+        Debug.Log("멈춤");
     }
     public void OpenDoor(){
         StartCoroutine(time());
