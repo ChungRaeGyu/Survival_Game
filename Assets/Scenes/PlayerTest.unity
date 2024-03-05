@@ -16309,7 +16309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &653930162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16340,6 +16340,7 @@ MonoBehaviour:
   ItemBox: {fileID: 0}
   Storage: {fileID: 0}
   InventoryOpen: 0
+  StorePanel: {fileID: 0}
   selectedItem: {fileID: 0}
   items:
   - {fileID: 11400000, guid: b7f8ec4b03a7ba041bf15e94be84b54f, type: 2}
@@ -16347,6 +16348,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3ff756ad73c8cda4292e62b4973884ad, type: 2}
   itemPrefeb: {fileID: 163974780816156977, guid: e1c3feaa5d6468a4aa9bb28d160caab1, type: 3}
   canvasTransform: {fileID: 2086870061}
+  buttonManager: {fileID: 0}
   ItmeBoxGird: {fileID: 505893747}
 --- !u!4 &653930164
 Transform:
@@ -52022,7 +52024,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2086870058
 MonoBehaviour:
   m_ObjectHideFlags: 0

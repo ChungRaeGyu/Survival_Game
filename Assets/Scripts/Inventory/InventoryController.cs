@@ -35,7 +35,7 @@ public class InventoryController : MonoBehaviour
     [SerializeField] Transform canvasTransform;    
     
     public ButtonManager buttonManager;
-    
+    StoreManager storeManager;
 
     //ItemBox
 
@@ -72,11 +72,11 @@ public class InventoryController : MonoBehaviour
         Inventory = InvenCanvas.transform.GetChild(0).gameObject;
         ItemBox = InvenCanvas.transform.GetChild(1).gameObject;
         Storage = InvenCanvas.transform.GetChild(2).gameObject;
+        storeManager = GameObject.Find("StoreManager").GetComponent<StoreManager>();
         Inventory.SetActive(false);
         ItemBox.SetActive(false);
         Storage.SetActive(false);
         StorePanel.SetActive(false);
-        //buttonManager.InitSetting(StorePanel, Storage);
         Debug.Log("실행");
     }
     private void Update()
@@ -241,8 +241,8 @@ public class InventoryController : MonoBehaviour
         if(complete){
             if (selectedItemGrid.name == "StoreGrid")
             {
-                print("상점에 놨다 : " + selectedItem.GetComponent<InventoryItem>().itemData.name);
-                
+                string ItemName = selectedItem.GetComponent<InventoryItem>().itemData.name;
+                storeManager.ItemUpdate(ItemName,1);
             }
             selectedItem = null;
             if(overlapItem !=null){ //들고 있던것과 원래 배치된것을 바꾼다. 이러기 위해서 overlapItem이 필요하다.
@@ -265,8 +265,8 @@ public class InventoryController : MonoBehaviour
             rectTransform.SetAsLastSibling();
             if (selectedItemGrid.name == "StoreGrid")
             {
-                print("상점에서 뺐다. : " + selectedItem.GetComponent<InventoryItem>().itemData.name);
-
+                string ItemName = selectedItem.GetComponent<InventoryItem>().itemData.name;
+                storeManager.ItemUpdate(ItemName, -1);
             }
         }
     }

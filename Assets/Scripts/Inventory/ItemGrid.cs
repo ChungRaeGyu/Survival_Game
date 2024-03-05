@@ -202,4 +202,22 @@ public class ItemGrid : MonoBehaviour
         }
         return true;
     }
+
+    public void CleanGridAll()
+    {
+        for (int ix = 0; ix < girdSizeWidth; ix++)
+        {
+            for (int iy = 0; iy < girdSizeheight; iy++)
+            {
+                inventoryItemSlot[ix,iy] = null;
+            }
+        }
+        Transform[] RemoveObj = GetComponentsInChildren<Transform>(); ;
+        for(int i=0; i<RemoveObj.Length;i++){
+            if(RemoveObj[i].CompareTag("Item")){
+                Destroy(RemoveObj[i].gameObject);
+            }
+        }
+    }
+
 }
