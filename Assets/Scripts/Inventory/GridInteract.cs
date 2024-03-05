@@ -26,6 +26,4 @@ public class GridInteract : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
         inventoryController.SelectedItemGrid = null;
         Debug.Log("나옴");
     }
-
-
 }

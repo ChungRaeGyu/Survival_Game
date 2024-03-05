@@ -23,6 +23,8 @@ public class InventoryController : MonoBehaviour
     public GameObject Storage;
     public bool InventoryOpen = false;
 
+    public GameObject StorePanel;
+
     
     [SerializeField] InventoryItem selectedItem;
     InventoryItem overlapItem;
@@ -31,7 +33,8 @@ public class InventoryController : MonoBehaviour
     [SerializeField] List<ItemData> items;
     [SerializeField] GameObject itemPrefeb;
     [SerializeField] Transform canvasTransform;    
-
+    
+    public ButtonManager buttonManager;
     
 
     //ItemBox
@@ -72,6 +75,9 @@ public class InventoryController : MonoBehaviour
         Inventory.SetActive(false);
         ItemBox.SetActive(false);
         Storage.SetActive(false);
+        StorePanel.SetActive(false);
+        //buttonManager.InitSetting(StorePanel, Storage);
+        Debug.Log("실행");
     }
     private void Update()
     {
@@ -162,7 +168,6 @@ public class InventoryController : MonoBehaviour
 
         int selectedItemID = UnityEngine.Random.Range(0, items.Count);
         inventoryItem.Set(items[selectedItemID]);
-        Debug.Log(inventoryItem);
     }
     private void InsertItem(InventoryItem itemToInsert)
     {        
@@ -234,6 +239,11 @@ public class InventoryController : MonoBehaviour
     {
         bool complete =selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y,ref overlapItem);
         if(complete){
+            if (selectedItemGrid.name == "StoreGrid")
+            {
+                print("상점에 놨다 : " + selectedItem.GetComponent<InventoryItem>().itemData.name);
+                
+            }
             selectedItem = null;
             if(overlapItem !=null){ //들고 있던것과 원래 배치된것을 바꾼다. 이러기 위해서 overlapItem이 필요하다.
                 selectedItem = overlapItem;
@@ -241,6 +251,7 @@ public class InventoryController : MonoBehaviour
                 rectTransform = selectedItem.GetComponent<RectTransform>();
                 rectTransform.SetAsLastSibling();
             }
+
         }
         
     }
@@ -252,6 +263,11 @@ public class InventoryController : MonoBehaviour
         {
             rectTransform = selectedItem.GetComponent<RectTransform>();
             rectTransform.SetAsLastSibling();
+            if (selectedItemGrid.name == "StoreGrid")
+            {
+                print("상점에서 뺐다. : " + selectedItem.GetComponent<InventoryItem>().itemData.name);
+
+            }
         }
     }
 
