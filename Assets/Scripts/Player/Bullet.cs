@@ -35,4 +35,10 @@ public class Bullet : MonoBehaviour
         yield return new WaitForSecondsRealtime(5f);
         _ManagedPool.Release(this);
     }
+    private void OnTriggerEnter(Collider other) {
+        if(other.CompareTag("Enemy")){
+            this.gameObject.SetActive(false);
+            //other.gameObject.GetComponent<Enemy>().Hp--;요론 느낌으로 하면 될듯?
+        }
+    }
 }

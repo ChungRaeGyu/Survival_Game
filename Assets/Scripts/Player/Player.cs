@@ -63,21 +63,28 @@ public class Player : MonoBehaviour
         LookAt();
         
 
-        if(Input.GetMouseButtonDown(0)){
-            switch (Weapon)
-            {
-                case "Sword":
-                    anim.SetTrigger("Attack");
-                    StartCoroutine(RangeSet());
-                    break;
-                case "Gun":
-                    var bullet = _Pool.Get();
-                    bullet.transform.position = transform.position + transform.forward.normalized;
-                    bullet.Shoot(transform.forward.normalized);
-                    break;
-            }
+        if(Input.GetMouseButtonDown(0))
+        {
+            Weapon_Type();
         }
     }
+
+    private void Weapon_Type()
+    {
+        switch (Weapon)
+        {
+            case "Sword":
+                anim.SetTrigger("Attack");
+                StartCoroutine(RangeSet());
+                break;
+            case "Gun":
+                var bullet = _Pool.Get();
+                bullet.transform.position = transform.position + transform.forward.normalized;
+                bullet.Shoot(transform.forward.normalized);
+                break;
+        }
+    }
+
     IEnumerator RangeSet(){
         yield return new WaitForSecondsRealtime(0.5f);
         AttackRange.SetActive(true);
@@ -206,7 +213,7 @@ public class Player : MonoBehaviour
         caseText = other.tag;
         Door = other.gameObject.GetComponent<DoorOpen>();
     }
-    private void AttackEnemy(Collider other)
+    public void AttackEnemy(Collider other)
     {
         if (AttackRange.activeSelf)
         {
