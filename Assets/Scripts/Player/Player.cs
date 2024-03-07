@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Pool;
 public class Player : MonoBehaviour
 {
     int speed = 0;
@@ -27,6 +28,14 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject AttackRange;
 
     DoorOpen Door;
+
+    string Weapon="Gun";
+    public GameObject _BulletPrefab;
+    private IObjectPool<Bullet> _Pool;
+
+    private void Awake() {
+        _Pool = new ObjectPool<Bullet>(CreatBullet,OnGetBullet,OnRealseBullet,OnDestroyBullet,maxSize:20);
+    }
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -55,8 +64,18 @@ public class Player : MonoBehaviour
         
 
         if(Input.GetMouseButtonDown(0)){
-            anim.SetTrigger("Attack");
-            StartCoroutine(RangeSet());
+            switch (Weapon)
+            {
+                case "Sword":
+                    anim.SetTrigger("Attack");
+                    StartCoroutine(RangeSet());
+                    break;
+                case "Gun":
+                    var bullet = _Pool.Get();
+                    bullet.transform.position = transform.position + transform.forward.normalized;
+                    bullet.Shoot(transform.forward.normalized);
+                    break;
+            }
         }
     }
     IEnumerator RangeSet(){
@@ -197,6 +216,19 @@ public class Player : MonoBehaviour
             }
         }
     }
+    private Bullet CreatBullet(){
+        Bullet bullet = Instantiate(_BulletPrefab).GetComponent<Bullet>();
+        bullet.SetManagedPool(_Pool);
+        return bullet;
+    }
+    private void OnGetBullet(Bullet bullet){
+        bullet.gameObject.SetActive(true);
+    }
+    private void OnRealseBullet(Bullet bullet){
+        bullet.gameObject.SetActive(false);
+    }
 
-
+    private void OnDestroyBullet(Bullet bullet){
+        Destroy(bullet.gameObject);
+    }
 }
