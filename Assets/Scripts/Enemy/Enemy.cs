@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 
-// 할일 : 행동이 끝난 후 복귀, 멀리서 공격시 추격,
+// 할일 : 공격 후 공격거리에 있을 때 한번 더 공격하게 하기
 public class Enemy : MonoBehaviour
 {
     public enum MoveDirectionType {horizontal, vertical};
@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
     public int maxHp = 10;
     public int curHp = 0;
     public int sensorRadius = 10;
+    public int attackRadius = 1;
     private Vector3 startPos;
 #endregion
 #region [Attack]
@@ -33,8 +34,8 @@ public class Enemy : MonoBehaviour
     Coroutine attackCoru;
 #endregion
 #region [Move]
-    Transform target;
-    bool targetFind = false;
+    public Transform target;
+    public bool targetFind = false;
     public float targetFolTime = 3f;
     private int CurDirType;
     private bool TurnDir = false;
@@ -52,23 +53,25 @@ public class Enemy : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         curHp = maxHp;
         navAg = GetComponent<NavMeshAgent>();
+        navAg.enabled = false;
     }
-
+    // 공격 중일때 상태
+    // targetFind = false, target != null, isAttack = true
     void Update()
     {
         if(!isAttack){
-            if(EnemyFind()){
+            if(EnemyFind(sensorRadius)){
                 EnemyFollow();
-                AttacMode();
+                AttackMode();
             }
             else{
                 if(targetFind){
-                    EnemyLost();
-                }
-                else if(targetFind && target == null) // 만약 누군가가 공격을 했다면 타겟만 지정해준다면 바로 따라갈 것이며 잘 돌아갈 것임
-                {
-                    if(navAg.remainingDistance < 0.5f){
-                        BackPosEnd();
+                    if(target != null)
+                        EnemyLost();
+                    else{
+                        if(navAg.remainingDistance < 0.5f){
+                            BackPosEnd();
+                        }
                     }
                 }
                 else{
@@ -100,7 +103,7 @@ public class Enemy : MonoBehaviour
             // 2.
         }
     }
-    void AttacMode()
+    void AttackMode()
     {
         // 상대와 나의 거리재기
         Vector3 offset = target.position - transform.position;
@@ -119,7 +122,10 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
         IsAttack();
         yield return new WaitForSeconds(1.0f);
+        bcol.enabled = false;
+        if(!EnemyFind(attackRadius)){
         isAttack = false;
+        }
     }
     void IsAttack()
     {
@@ -127,10 +133,10 @@ public class Enemy : MonoBehaviour
         bcol.enabled = true;
     }
 
-    bool EnemyFind()
+    bool EnemyFind(int radius)
     {
         Collider[] collider 
-        = Physics.OverlapSphere(this.transform.position,sensorRadius,1 << 6);
+        = Physics.OverlapSphere(this.transform.position,radius,1 << 6);
         if(collider.Length > 0){
             target = collider[0].gameObject.transform;
             CurMoveTime = 0f;
@@ -141,6 +147,7 @@ public class Enemy : MonoBehaviour
     }
     void EnemyLost() // range out
     {
+        EnemyFollow();
         CurMoveTime += Time.deltaTime;
         if(CurMoveTime >= targetFolTime)
         {
@@ -218,11 +225,13 @@ public class Enemy : MonoBehaviour
 
     void BackPosStart()
     {
+        Debug.Log("Return Back!!");
         navAg.enabled = true;
         navAg.destination = startPos;
     }
     void BackPosEnd()
     {
+        Debug.Log("Return End");
         navAg.ResetPath();
         navAg.enabled = false;
         targetFind = false;
